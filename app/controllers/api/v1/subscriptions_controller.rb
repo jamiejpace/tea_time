@@ -7,7 +7,7 @@ class Api::V1::SubscriptionsController < ApplicationController
     if subscription.save
       render json: SubscriptionSerializer.new(subscription), status: 201
     else
-      render json: { error: 'no subscription found' }, status: 404
+      render json: { error: 'bad_request' }, status: :bad_request
     end
   end
 
