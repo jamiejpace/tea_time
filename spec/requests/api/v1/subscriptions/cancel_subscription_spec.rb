@@ -31,8 +31,9 @@ RSpec.describe 'cancel subscription endpoint' do
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
     subscription1 = Subscription.create!(customer_id: customer1.id, tea_id: tea1.id, title: 'Weekly Earl Grey', price: 10.00, frequency: 'weekly')
 
-    patch "/api/v1/subscriptions/#{subscription1.id}", params: { status: "pending" }
+    patch "/api/v1/subscriptions/#{subscription1.id}", params: { status: 'pending' }
 
-    require 'pry'; binding.pry
+    expect(response).to_not be_successful
+    expect(response.status).to eq(400)
   end
 end
