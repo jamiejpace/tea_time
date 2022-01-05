@@ -21,6 +21,7 @@ Tea Time is a rails API for a tea subcription service
   <img src="https://img.shields.io/badge/Git-F05032.svg?&style=flaste&logo=git&logoColor=white" />
   <img src="https://img.shields.io/badge/GitHub-181717.svg?&style=flaste&logo=github&logoColor=white" />
   <img src="https://img.shields.io/badge/Postman-FF6E4F.svg?&style=flat&logo=postman&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-%234169E1?logo=postgresql&logoColor=white" />
 </p>
 
 #### Gems
