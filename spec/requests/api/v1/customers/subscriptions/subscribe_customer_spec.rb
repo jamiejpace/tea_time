@@ -6,14 +6,13 @@ RSpec.describe 'subscribe customer endpoint' do
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
 
     body = {
-      customer_id: customer1.id,
       tea_id: tea1.id,
       title: 'Weekly Earl Grey',
       price: 10.00,
       frequency: 'weekly'
     }
 
-    post '/api/v1/subscriptions', params: body
+    post "/api/v1/customers/#{customer1.id}/subscriptions", params: body
 
     expect(response).to be_successful
     expect(response.status).to eq(201)
@@ -29,11 +28,10 @@ RSpec.describe 'subscribe customer endpoint' do
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
 
     body = {
-      customer_id: customer1.id,
       tea_id: tea1.id
     }
 
-    post '/api/v1/subscriptions', params: body
+    post "/api/v1/customers/#{customer1.id}/subscriptions", params: body
 
     expect(response).to_not be_successful
     expect(response.status).to eq(400)
@@ -44,32 +42,30 @@ RSpec.describe 'subscribe customer endpoint' do
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
 
     body = {
-      customer_id: 5555,
       tea_id: tea1.id,
       title: 'Weekly Earl Grey',
       price: 10.00,
       frequency: 'weekly'
     }
 
-    post '/api/v1/subscriptions', params: body
+    post '/api/v1/customers/999999/subscriptions', params: body
 
     expect(response).to_not be_successful
     expect(response.status).to eq(400)
   end
 
-  it 'can not create a subscription if customer not valid' do
+  it 'can not create a subscription if tea not valid' do
     customer1 = Customer.create!(first_name: 'Jamie', last_name: 'Pace', email: 'fake_email@email.com', address: '123 Address, CO')
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
 
     body = {
-      customer_id: customer1.id,
       tea_id: 4444,
       title: 'Weekly Earl Grey',
       price: 10.00,
       frequency: 'weekly'
     }
 
-    post '/api/v1/subscriptions', params: body
+    post "/api/v1/customers/#{customer1.id}/subscriptions", params: body
 
     expect(response).to_not be_successful
     expect(response.status).to eq(400)
