@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'customer subscriptions endpoint' do
-  it 'returns all subcritpions for a given customer' do
+  it 'returns all subscriptions for a given customer' do
     customer1 = Customer.create!(first_name: 'Jamie', last_name: 'Pace', email: 'fake_email@email.com', address: '123 Address, CO')
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
     tea2 = Tea.create!(title: 'Green Tea', description: 'Great tea', temperature: 102, brew_time: '3 minutes')
@@ -19,5 +19,17 @@ RSpec.describe 'customer subscriptions endpoint' do
     expect(subscription).to have_key(:data)
     expect(subscription[:data]).to be_an(Array)
     expect(subscription[:data].count).to eq(2)
+  end
+
+  it 'returns an error if customer does not exist' do
+    get '/api/v1/customers/1/subscriptions'
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(400)
+
+    error = JSON.parse(response.body, symbolize_names: true)
+
+    expect(error).to have_key(:error)
+    expect(error[:error]).to eq("bad request")
   end
 end
