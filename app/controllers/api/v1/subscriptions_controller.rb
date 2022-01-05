@@ -1,6 +1,7 @@
 class Api::V1::SubscriptionsController < ApplicationController
   before_action :require_valid_customer, except: :update
   before_action :require_valid_tea, except: :update
+  before_action :require_valid_status
 
   def create
     subscription = Subscription.new(subscription_params)
@@ -41,5 +42,11 @@ class Api::V1::SubscriptionsController < ApplicationController
 
   def subscription_params
     params.permit(:customer_id, :tea_id, :title, :price, :frequency, :status)
+  end
+
+  def require_valid_status
+    if params[:status] && params[:status] != "active" && params[:status] != "cancelled"
+      render json: { error: 'bad request' }, status: :bad_request
+    end
   end
 end
