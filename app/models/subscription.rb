@@ -15,5 +15,4 @@ class Subscription < ApplicationRecord
     quarterly: 2,
     yearly: 3
   }
-
 end
