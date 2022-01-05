@@ -1,7 +1,5 @@
 # <div align="center">Tea Time</div>
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
-
 ### Overview
 
 Tea Time is a rails API for a tea subcription service
