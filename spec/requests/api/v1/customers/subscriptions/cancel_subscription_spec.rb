@@ -6,7 +6,7 @@ RSpec.describe 'cancel subscription endpoint' do
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
     subscription1 = Subscription.create!(customer_id: customer1.id, tea_id: tea1.id, title: 'Weekly Earl Grey', price: 10.00, frequency: 'weekly')
 
-    patch "/api/v1/subscriptions/#{subscription1.id}", params: { status: "cancelled" }
+    patch "/api/v1/customers/#{customer1.id}/subscriptions/#{subscription1.id}", params: { status: 'cancelled' }
 
     expect(response).to be_successful
     expect(response.status).to eq(200)
@@ -20,7 +20,7 @@ RSpec.describe 'cancel subscription endpoint' do
     customer1 = Customer.create!(first_name: 'Jamie', last_name: 'Pace', email: 'fake_email@email.com', address: '123 Address, CO')
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
 
-    patch '/api/v1/subscriptions/8888', params: { status: "cancelled" }
+    patch "/api/v1/customers/#{customer1.id}/subscriptions/99999999", params: { status: 'cancelled' }
 
     expect(response).to_not be_successful
     expect(response.status).to eq(400)
@@ -31,7 +31,7 @@ RSpec.describe 'cancel subscription endpoint' do
     tea1 = Tea.create!(title: 'Earl Grey', description: 'Good tea', temperature: 100, brew_time: '5 minutes')
     subscription1 = Subscription.create!(customer_id: customer1.id, tea_id: tea1.id, title: 'Weekly Earl Grey', price: 10.00, frequency: 'weekly')
 
-    patch "/api/v1/subscriptions/#{subscription1.id}", params: { status: 'pending' }
+    patch "/api/v1/customers/#{customer1.id}/subscriptions/#{subscription1.id}", params: { status: 'pending' }
 
     expect(response).to_not be_successful
     expect(response.status).to eq(400)
