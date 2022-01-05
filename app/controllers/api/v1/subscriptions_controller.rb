@@ -1,14 +1,23 @@
 class Api::V1::SubscriptionsController < ApplicationController
-  before_action :require_valid_customer, except: :update
-  before_action :require_valid_tea, except: :update
+  before_action :require_valid_customer, only: :create
+  before_action :require_valid_tea, only: :create
   before_action :require_valid_status
+
+  def index
+    if params[:customer_id] && valid_customer
+      subscriptions = valid_customer.subscriptions
+      render json: SubscriptionSerializer.new(subscriptions), status: 200
+    else
+      render json: { error: 'bad request' }, status: :bad_request
+    end
+  end
 
   def create
     subscription = Subscription.new(subscription_params)
     if subscription.save
       render json: SubscriptionSerializer.new(subscription), status: 201
     else
-      render json: { error: 'bad_request' }, status: :bad_request
+      render json: { error: 'bad request' }, status: :bad_request
     end
   end
 
@@ -18,7 +27,7 @@ class Api::V1::SubscriptionsController < ApplicationController
       subscription.update(subscription_params)
       render json: SubscriptionSerializer.new(subscription), status: 200
     else
-      render json: { error: 'bad_request' }, status: :bad_request
+      render json: { error: 'bad request' }, status: :bad_request
     end
   end
 
