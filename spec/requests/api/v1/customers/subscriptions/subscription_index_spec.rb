@@ -30,6 +30,6 @@ RSpec.describe 'customer subscriptions endpoint' do
     error = JSON.parse(response.body, symbolize_names: true)
 
     expect(error).to have_key(:error)
-    expect(error[:error]).to eq("bad request")
+    expect(error[:error]).to eq("Customer not found")
   end
 end

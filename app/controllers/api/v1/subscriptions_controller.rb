@@ -1,51 +1,47 @@
 class Api::V1::SubscriptionsController < ApplicationController
-  before_action :require_valid_customer, only: :create
+  before_action :require_valid_customer
   before_action :require_valid_tea, only: :create
   before_action :require_valid_status
 
   def index
-    if params[:customer_id] && valid_customer
-      subscriptions = valid_customer.subscriptions
-      render json: SubscriptionSerializer.new(subscriptions), status: 200
-    else
-      render json: { error: 'bad request' }, status: :bad_request
-    end
+    subscriptions = current_customer.subscriptions
+    render json: SubscriptionSerializer.new(subscriptions), status: :ok
   end
 
   def create
     subscription = Subscription.new(subscription_params)
     if subscription.save
-      render json: SubscriptionSerializer.new(subscription), status: 201
+      render json: SubscriptionSerializer.new(subscription), status: :created
     else
-      render json: { error: 'bad request' }, status: :bad_request
+      render json: { errors: subscription.errors.full_messages }, status: :bad_request
     end
   end
 
   def update
-    subscription = Subscription.find_by(id: params[:id])
+    subscription = Subscription.find_by(id: params[:id], customer_id: params[:customer_id])
     if subscription
       subscription.update(subscription_params)
-      render json: SubscriptionSerializer.new(subscription), status: 200
+      render json: SubscriptionSerializer.new(subscription), status: :ok
     else
-      render json: { error: 'bad request' }, status: :bad_request
+      render json: { errors: 'Subscription not found' }, status: :bad_request
     end
   end
 
   private
 
   def require_valid_customer
-    render json: { error: 'bad request' }, status: :bad_request unless valid_customer
+    render json: { errors: 'Customer not found' }, status: :bad_request unless current_customer
   end
 
-  def valid_customer
+  def current_customer
     Customer.find_by(id: params[:customer_id])
   end
 
   def require_valid_tea
-    render json: { error: "bad request" }, status: :bad_request unless valid_tea
+    render json: { errors: 'Tea not found' }, status: :bad_request unless current_tea
   end
 
-  def valid_tea
+  def current_tea
     Tea.find_by(id: params[:tea_id])
   end
 
@@ -55,7 +51,7 @@ class Api::V1::SubscriptionsController < ApplicationController
 
   def require_valid_status
     if params[:status] && params[:status] != "active" && params[:status] != "cancelled"
-      render json: { error: 'bad request' }, status: :bad_request
+      render json: { errors: 'Status not valid' }, status: :bad_request
     end
   end
 end
